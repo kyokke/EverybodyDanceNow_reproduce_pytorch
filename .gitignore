@@ -122,3 +122,4 @@ env_pose2pose/*
 
 # generated file by make_source.py
 data/source/* 
+data/target/*
