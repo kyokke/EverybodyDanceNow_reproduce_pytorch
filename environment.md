@@ -41,3 +41,34 @@ pip install -r requirements.txt
 - Pytorch 1.0 で実行できるようにしたいなぁ。。今更 0.41 使いたくない
 - ゆくゆくは 設定済みのnvidia-docker を提供したい. 
  
+# 動作させるまでのメモ
+
+## とりあえず python 0.4.1 で
+実行したら、
+
+### face_enhancer/prepare.py
+
+そのままだと関係するパスに矛盾があったので、
+
+python face_enhancer/prepar.py 
+と実行する前提で、
+
+../data などから始まるパスの指定はすべて
+./data と1階層直した
+ 6行目からのディレクトリがない場合は、作る。
+
+### face_enhancer/main.py 
+なおフォルダの指定パスが、おかしいので
+cd face_enhancer
+python main.py 
+としないと、相対パスの解決ができない
+
+face_enahncer モジュールがないと言われる
+-> 実際には、 face_enhancer/ から main.py を実行するので　
+import している utils を パッケージとして認識してもらえるように, 
+__init__.py を utils フォルダに追加
+
+main.py の is_debug = Falseに
+(そうでないと毎バッチモデルデータが保存されてディスクがあふれる)
+
+TODO: これもレポジトリのルートから実行できるようにパスを変更する

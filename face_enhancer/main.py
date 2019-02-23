@@ -64,5 +64,5 @@ def main(is_debug):
 
 if __name__ == '__main__':
     cudnn.enabled = True
-    is_debug=True
+    is_debug=False
     main(is_debug)
