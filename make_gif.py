@@ -8,6 +8,7 @@ import matplotlib.animation as ani
 from IPython.display import HTML
 import matplotlib
 
+
 source_dir = Path('./data/source/test_img')
 target_dir = Path('./results/target/test_latest/images')
 label_dir = Path('./data/source/test_label_ori')
@@ -44,9 +45,8 @@ ax2 = fig.add_subplot(132)
 ax3 = fig.add_subplot(133)
 
 anim = ani.FuncAnimation(fig, animate, frames=len(target_label_paths), interval=1000 / 24)
+# plt.show()
 plt.close()
 
-js_anim = HTML(anim.to_jshtml())
- 
-
-anim.save("output.gif", writer="imagemagick")
+# js_anim = HTML(anim.to_jshtml()) # 不要
+anim.save("output.gif", writer="pillow") # imagemagick ではエラーがでたため、pillowを使ってみる.
