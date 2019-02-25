@@ -94,8 +94,8 @@ for idx in tqdm(range(len(os.listdir(str(img_dir))))):
         head_cord = pose_cords[-1] # if there is not head point in picture, use last frame
 
     pose_cords.append(head_cord)
-    head = img[int(head_cord[1] - crop_size): int(head_cord[1] + crop_size),
-           int(head_cord[0] - crop_size): int(head_cord[0] + crop_size), :]
+    head = img[max(0, int(head_cord[1]- crop_size)):int(head_cord[1]+crop_size), 
+            max(0,int(head_cord[0]-crop_size)):int(head_cord[0]+crop_size),:]
     plt.imshow(head)
     plt.savefig(str(train_head_dir.joinpath('pose_{}.jpg'.format(idx))))
     plt.clf()

@@ -6,6 +6,8 @@ from torch import nn
 import torch.optim as optim
 from skimage.io import imsave
 
+
+
 class Trainer(object):
     def __init__(self, ckpt_dir, log_dir, dataset, dataloader,
                  log_every=10, save_every=500,
@@ -30,7 +32,8 @@ class Trainer(object):
         self.sampler = dataloader
         self.enumerator = None
 
-        from face_enhancer.utils.perceptual_loss import VGG_perceptual_loss
+        # from face_enhancer.utils.perceptual_loss import VGG_perceptual_loss
+        from utils.perceptual_loss import VGG_perceptual_loss
         self.gen_loss = nn.MSELoss()
         self.recon_loss = VGG_perceptual_loss(pretrained=True, device=self.device)
         self.dis_loss = nn.MSELoss()  # LSGAN

@@ -114,3 +114,18 @@ dmypy.json
 .pyre/
 src/pix2pixHD/models/vgg19-dcbb9e9d.pth.crdownload
 src/PoseEstimation/network/weight/pose_model.pth
+
+
+### ------ project dependent ignore
+# venv folder for this project
+env_pose2pose/*
+
+# vscode user-settings-folder
+.vscode/*
+
+# generated files
+data/source/* 
+data/target/*
+data/face/*
+checkpoints/face/*
+
