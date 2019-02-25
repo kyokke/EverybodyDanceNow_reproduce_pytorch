@@ -7,68 +7,84 @@ Pytorch 0.4.1  <br>
 OpenCV 3.4.4  <br>
 
 
-## 環境構築についてのメモ
+## 環境構築についてのメモ 
 
-とりあえず最初の動作確認では、書かれている環境になるべく近づけることにした。
-Pythonパッケージ系については、
+- 想定環境
+ - Ubuntu 16.04. 
+   - たぶん 18.04 でもいける ( つまり google collabo でもいけるはず) 
 
-pip install -r requirements.txt 
-
-すればよい。
-
-- Ubuntu 16.0.4 を使っているのでOK
-
-- Python 3.6.5
- - pyenv を使って 本プロジェクトに対して python 3.6.5 を使用するように
-
-- Pytorch 0.4.1 
- - 2019/02/21 現在、最新版は1.0のため、.whl ファイルからのインストール
- - https://pytorch.org/get-started/previous-versions/ 
-  - これによると、0.4.1 のビルド済みパッケージは CUDA 9.2 版が最新なので、NVIDIA系の環境もそれに合わせた
-    - CUDA 9.2.148
+1. 下記をインストール
+ - Python 3.6.5
+ - CUDA 9.2 と それらをサポートする GPU & ドライバ
+  - 松本は下記をインストール
+    - RTX2080 Ti
+    - CUDA V9.2.148 
     - nvidia driver 415
-    - ちなみに GPUは、RTX2080 Ti & GTX-1080 Ti 
 
+2. 検討用 仮想環境を作成
+```
+$ python3 -m venv env_pose2pose
+```
+3. 仮想環境に入る
+```
+$ source env_pose2pose/bin/activate
+```
+4. 必要なPythonパッケージをインストール
+```
+$ cd [repository root]
+$ pip install -r requirements.txt
+```
+5. Pytorch 0.4.1 のインストール
+
+ - 2019/02/21 現在、最新版は1.0。.whl ファイルからのインストール
+ - https://pytorch.org/get-started/previous-versions/ 
+ から CUDA 9.2 用 Pytorch の .whl ファイルをダウンロード, repositry root において..
+```
+$ pip install torch-0.4.1-cp36-cp36m-linux_x86_64.whl
+$ pip install torch-vision
+```
+[補足]
 - OpenCV 3.4.4
  - 非公式の opencv-python というパッケージが利用できるが、最新版を入れるとOpenCV v4 が入ってしまうので、バージョンを指定する。
  - pip install opencv-python=3.4.4.19
+ これで、必要なバイナリも一緒にインストールされるようである。
 
-- その他
- - 上記を準備しただけでは、エラーが多発するため、都度見つからないモジュールをインストール
+
+## テスト動作させる上での注意点
+基本的には、root repositry から すべてのコードを実行するようになっている。
 
 ## TODO
+ - Pytorch 1.0 で実行できるようにしたいなぁ。。今更 0.41 使いたくない
 
-- Pytorch 1.0 で実行できるようにしたいなぁ。。今更 0.41 使いたくない
-- ゆくゆくは 設定済みのnvidia-docker を提供したい. 
- 
-# 動作させるまでのメモ
+ - face enhancement は一通り実行するのに、現状のレポジトリの状態ではface_enhance の結果は使われていない様子 -> やる? 
+   ->  faece enhancement の動作確認は skip した (エイヤで動かそうとしたら、必要なファイルがないと怒られるが原因は追ってない)
 
-## とりあえず python 0.4.1 で
-実行したら、
+ - 各 python コードの入出力関係を整理して、評価しやすくする
+
+## その他メモ (松本用)
 
 ### face_enhancer/prepare.py
 
-そのままだと関係するパスに矛盾があったので、
-
-python face_enhancer/prepar.py 
-と実行する前提で、
-
-../data などから始まるパスの指定はすべて
-./data と1階層直した
- 6行目からのディレクトリがない場合は、作る。
+そのままだと関係するパスに矛盾があったので、 
+```
+$ python face_enhancer/prepar.py と実行する前提で、
+```
+../data などから始まるパスの指定はすべて ./data と1階修正。
+また、prepare.py の6行目以降で指定されているディレクトリが一部存在しないと怒られる。自分でフォルダーを作る必要がある
 
 ### face_enhancer/main.py 
-なおフォルダの指定パスが、おかしいので
-cd face_enhancer
-python main.py 
-としないと、相対パスの解決ができない
 
-face_enahncer モジュールがないと言われる
--> 実際には、 face_enhancer/ から main.py を実行するので　
-import している utils を パッケージとして認識してもらえるように, 
-__init__.py を utils フォルダに追加
+同じく、フォルダの指定パスが、おかしい。
+現状、こちらは、
+```
+$ cd face_enhancer
+$ python main.py
+```
+と、フォルダを潜って実行する前提で、エラーを解消した
 
-main.py の is_debug = Falseに
-(そうでないと毎バッチモデルデータが保存されてディスクがあふれる)
 
-TODO: これもレポジトリのルートから実行できるようにパスを変更する
+また、一部 内部モジュールが存在しないと怒られたため、
+__init.__.pyを適宜追加している。
+
+main.py の is_debug = Falseにする。
+(そうでないと毎バッチモデルデータが保存されてディスク容量があふれる)
